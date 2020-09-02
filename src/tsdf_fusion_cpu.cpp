@@ -197,12 +197,12 @@ int main(int argc, char * argv[]) {
     curr_frame_prefix << std::setw(6) << std::setfill('0') << frame_idx;
 
     // Read current frame depth
-    std::string depth_im_file = data_path + "/" + curr_frame_prefix.str() + "_depth_fix.png";
+    std::string depth_im_file = data_path + "/" + curr_frame_prefix.str() + "_depth.png";
     std::cout << "depth: " << depth_im_file << std::endl;
     ReadDepth(depth_im_file, im_height, im_width, depth_im);
 
     // Read base frame camera pose
-    std::string cam2world_file = data_path + "/" + curr_frame_prefix.str() + "_pose_fix.txt";
+    std::string cam2world_file = data_path + "/" + curr_frame_prefix.str() + "_pose.txt";
     std::vector<float> cam2world_vec = LoadMatrixFromFile(cam2world_file, 4, 4);
     std::copy(cam2world_vec.begin(), cam2world_vec.end(), cam2world);
 
