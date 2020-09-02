@@ -11,28 +11,8 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   ".././include"
-  "/home/hongtao/src_lib/opencv-3.4.10/build"
-  "/home/hongtao/src_lib/opencv-3.4.10/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/include/opencv"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/core/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/flann/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/imgproc/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/ml/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/photo/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/video/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/viz/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/dnn/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/features2d/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/imgcodecs/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/shape/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/videoio/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/calib3d/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/highgui/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/objdetect/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/stitching/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/superres/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/ts/include"
-  "/home/hongtao/src_lib/opencv-3.4.10/modules/videostab/include"
+  "/opt/ros/kinetic/include/opencv-3.3.1-dev"
+  "/opt/ros/kinetic/include/opencv-3.3.1-dev/opencv"
   )
 
 # Targets to which this target links.

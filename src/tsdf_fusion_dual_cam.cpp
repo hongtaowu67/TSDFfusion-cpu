@@ -5,6 +5,9 @@
 // Modification: Able to fuse data from two cameras
 // ---------------------------------------------------------
 
+//./tsdf-fusion-dual-cam /home/hongtao/Dropbox/RSS2021/ps-intrinsics.txt /home/hongtao/Dropbox/RSS2021/rs-intrinsics.txt /home/hongtao/Dropbox/RSS2021/fusion_data/logs_test/2020-08-29-17-56-44/tsdf_fusion_dual/ 0.006 150 100 100 -0.5 -0.8 0.01
+
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>

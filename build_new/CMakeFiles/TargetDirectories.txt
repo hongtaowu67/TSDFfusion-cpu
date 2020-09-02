@@ -1,4 +1,0 @@
-/home/hongtao/src/TSDFfusion/build_new/CMakeFiles/edit_cache.dir
-/home/hongtao/src/TSDFfusion/build_new/CMakeFiles/rebuild_cache.dir
-/home/hongtao/src/TSDFfusion/build_new/CMakeFiles/tsdf-fusion-dual-cam.dir
-/home/hongtao/src/TSDFfusion/build_new/CMakeFiles/tsdf-fusion-cpu.dir

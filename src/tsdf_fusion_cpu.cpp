@@ -88,7 +88,7 @@ int main(int argc, char * argv[]) {
   float num_frames;
 
   float cam_K[3 * 3];
-  float base2world[4 * 4];
+  // float base2world[4 * 4];
 //   float cam2base[4 * 4]; # Modification: Hongtao Wu
   float cam2world[4 * 4];
   int im_width = 640;
@@ -144,21 +144,21 @@ int main(int argc, char * argv[]) {
 
   std::cout << "Intrinsic: " << cam_K_vec[0] << ", " << cam_K_vec[1] << ", " << cam_K_vec[2] << std::endl;
 
-  // Read base frame camera pose
-  std::ostringstream base_frame_prefix;
-  base_frame_prefix << std::setw(6) << std::setfill('0') << base_frame_idx;
-  std::string base2world_file = data_path + "/" + base_frame_prefix.str() + "_pose.txt";
+//   // Read base frame camera pose
+//   std::ostringstream base_frame_prefix;
+//   base_frame_prefix << std::setw(6) << std::setfill('0') << base_frame_idx;
+//   std::string base2world_file = data_path + "/" + base_frame_prefix.str() + "_pose.txt";
   
-  // The base frame is frame with the smallest index
-  std::cout << "Base frame prefix: " << base_frame_prefix.str() << std::endl;
+//   // The base frame is frame with the smallest index
+//   std::cout << "Base frame prefix: " << base_frame_prefix.str() << std::endl;
   
-  // std::cout << "base2world_file: " << base2world_file << std::endl; 
-  std::vector<float> base2world_vec = LoadMatrixFromFile(base2world_file, 4, 4);
-  std::copy(base2world_vec.begin(), base2world_vec.end(), base2world);
+//   // std::cout << "base2world_file: " << base2world_file << std::endl; 
+//   std::vector<float> base2world_vec = LoadMatrixFromFile(base2world_file, 4, 4);
+//   std::copy(base2world_vec.begin(), base2world_vec.end(), base2world);
 
-// Invert base frame camera pose to get world-to-base frame transform 
-//   float base2world_inv[16] = {0}; # Modification: Hongtao Wu
-//   invert_matrix(base2world, base2world_inv);
+// // Invert base frame camera pose to get world-to-base frame transform 
+// //   float base2world_inv[16] = {0}; # Modification: Hongtao Wu
+// //   invert_matrix(base2world, base2world_inv);
 
   // Initialize voxel grid
   float * voxel_grid_TSDF = new float[voxel_grid_dim_x * voxel_grid_dim_y * voxel_grid_dim_z];
@@ -197,12 +197,12 @@ int main(int argc, char * argv[]) {
     curr_frame_prefix << std::setw(6) << std::setfill('0') << frame_idx;
 
     // Read current frame depth
-    std::string depth_im_file = data_path + "/" + curr_frame_prefix.str() + "_depth.png";
-    // std::cout << "depth: " << depth_im_file << std::endl;
+    std::string depth_im_file = data_path + "/" + curr_frame_prefix.str() + "_depth_fix.png";
+    std::cout << "depth: " << depth_im_file << std::endl;
     ReadDepth(depth_im_file, im_height, im_width, depth_im);
 
     // Read base frame camera pose
-    std::string cam2world_file = data_path + "/" + curr_frame_prefix.str() + "_pose.txt";
+    std::string cam2world_file = data_path + "/" + curr_frame_prefix.str() + "_pose_fix.txt";
     std::vector<float> cam2world_vec = LoadMatrixFromFile(cam2world_file, 4, 4);
     std::copy(cam2world_vec.begin(), cam2world_vec.end(), cam2world);
 
