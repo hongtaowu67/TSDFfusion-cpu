@@ -50,7 +50,7 @@ void Integrate(float * cam_K, float * cam2base, float * depth_im,
 
           float depth_val = depth_im[pt_pix_y * im_width + pt_pix_x];
 
-          if (depth_val <= 0 || depth_val > 6)
+          if (depth_val <= 0.0001 || depth_val > 6)
             continue;
 
           float diff = depth_val - pt_cam_z;
@@ -100,7 +100,6 @@ int main(int argc, char * argv[]) {
   float voxel_grid_origin_y = -0.5f;
   float voxel_grid_origin_z = -0.1f;
   float voxel_size = 0.006f;
-  float trunc_margin = voxel_size * 5;
   int voxel_grid_dim_x = 100;
   int voxel_grid_dim_y = 100;
   int voxel_grid_dim_z = 50;
@@ -136,6 +135,8 @@ int main(int argc, char * argv[]) {
 
     std::cout << "Finish parsing input parameter!\n";
   }
+
+  float trunc_margin = voxel_size * 5;
 
   std::cout << "cam_K_file: " << cam_K_file << std::endl;
   // Read camera intrinsics
@@ -203,6 +204,7 @@ int main(int argc, char * argv[]) {
 
     // Read base frame camera pose
     std::string cam2world_file = data_path + "/" + curr_frame_prefix.str() + "_pose.txt";
+    std::cout << "pose: " << cam2world_file << std::endl;
     std::vector<float> cam2world_vec = LoadMatrixFromFile(cam2world_file, 4, 4);
     std::copy(cam2world_vec.begin(), cam2world_vec.end(), cam2world);
 

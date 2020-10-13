@@ -75,7 +75,7 @@ void ReadDepth(std::string filename, int H, int W, float * depth) {
   for (int r = 0; r < H; ++r)
     for (int c = 0; c < W; ++c) {
       depth[r * W + c] = (float)(depth_mat.at<unsigned short>(r, c)) / 1000.0f;
-      if (depth[r * W + c] > 6.0f) // Only consider depth < 6m
+      if (depth[r * W + c] > 2.0f) // Only consider depth < 2m
         depth[r * W + c] = 0;
     }
 }
