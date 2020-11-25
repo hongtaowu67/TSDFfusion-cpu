@@ -136,7 +136,7 @@ int main(int argc, char * argv[]) {
     std::cout << "Finish parsing input parameter!\n";
   }
 
-  float trunc_margin = voxel_size * 5;
+  float trunc_margin = voxel_size * 6;
 
   std::cout << "cam_K_file: " << cam_K_file << std::endl;
   // Read camera intrinsics

@@ -13,5 +13,5 @@ include_directories(./include/)
 add_executable(tsdf-fusion-cpu src/tsdf_fusion_cpu.cpp)
 target_link_libraries(tsdf-fusion-cpu ${OpenCV_LIBS})
 
-add_executable(tsdf-fusion-dual-cam src/tsdf_fusion_dual_cam.cpp)
-target_link_libraries(tsdf-fusion-dual-cam ${OpenCV_LIBS} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+#add_executable(tsdf-fusion-dual-cam src/tsdf_fusion_dual_cam.cpp)
+#target_link_libraries(tsdf-fusion-dual-cam ${OpenCV_LIBS} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
