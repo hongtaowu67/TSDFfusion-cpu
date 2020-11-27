@@ -5,6 +5,7 @@
 // Modification: 
 //    Change the base frame from the camera fram of the first frame to the world frame
 //    Change from GPU to CPU
+// Usage: ./tsdf_fusion_cpu cam_K_file data_dir num_of_frame v_size v_x_dim v_y_dim v_z_dim v_x_origin v_y_origin v_z_origin
 // ---------------------------------------------------------
 
 #include <iostream>
@@ -18,12 +19,9 @@
 void Integrate(float * cam_K, float * cam2base, float * depth_im,
                int im_height, int im_width, int voxel_grid_dim_x, int voxel_grid_dim_y, int voxel_grid_dim_z,
                float voxel_grid_origin_x, float voxel_grid_origin_y, float voxel_grid_origin_z, float voxel_size, float trunc_margin,
-               float * voxel_grid_TSDF, float * voxel_grid_weight) {
-
-  // int pt_grid_z = blockIdx.x;
-  // int pt_grid_y = threadIdx.x;
-
-  for (int pt_grid_x=0; pt_grid_x < voxel_grid_dim_x; ++pt_grid_x) {
+               float * voxel_grid_TSDF, float * voxel_grid_weight
+){
+  for (int pt_grid_x=0; pt_grid_x < voxel_grid_dim_x; ++pt_grid_x){
     for (int pt_grid_y=0; pt_grid_y < voxel_grid_dim_y; ++pt_grid_y){
         for (int pt_grid_z=0; pt_grid_z < voxel_grid_dim_z; ++pt_grid_z){
           // Convert voxel center from grid coordinates to base frame camera coordinates
@@ -88,14 +86,12 @@ int main(int argc, char * argv[]) {
   float num_frames;
 
   float cam_K[3 * 3];
-  // float base2world[4 * 4];
-//   float cam2base[4 * 4]; # Modification: Hongtao Wu
   float cam2world[4 * 4];
   int im_width = 640;
   int im_height = 480;
   float depth_im[im_height * im_width];
 
-  // Voxel grid parameters (change these to change voxel grid resolution, etc.)
+  // Voxel grid parameters
   float voxel_grid_origin_x = -0.5f; // Location of voxel grid origin in base frame camera coordinates
   float voxel_grid_origin_y = -0.5f;
   float voxel_grid_origin_z = -0.1f;
@@ -136,60 +132,23 @@ int main(int argc, char * argv[]) {
     std::cout << "Finish parsing input parameter!\n";
   }
 
+  // Truncated Margin
+  // To control how the truncate margin of TSDF
   float trunc_margin = voxel_size * 6;
 
-  std::cout << "cam_K_file: " << cam_K_file << std::endl;
   // Read camera intrinsics
+  std::cout << "cam_K_file: " << cam_K_file << std::endl;
   std::vector<float> cam_K_vec = LoadMatrixFromFile(cam_K_file, 3, 3);
   std::copy(cam_K_vec.begin(), cam_K_vec.end(), cam_K);
 
   std::cout << "Intrinsic: " << cam_K_vec[0] << ", " << cam_K_vec[1] << ", " << cam_K_vec[2] << std::endl;
-
-//   // Read base frame camera pose
-//   std::ostringstream base_frame_prefix;
-//   base_frame_prefix << std::setw(6) << std::setfill('0') << base_frame_idx;
-//   std::string base2world_file = data_path + "/" + base_frame_prefix.str() + "_pose.txt";
-  
-//   // The base frame is frame with the smallest index
-//   std::cout << "Base frame prefix: " << base_frame_prefix.str() << std::endl;
-  
-//   // std::cout << "base2world_file: " << base2world_file << std::endl; 
-//   std::vector<float> base2world_vec = LoadMatrixFromFile(base2world_file, 4, 4);
-//   std::copy(base2world_vec.begin(), base2world_vec.end(), base2world);
-
-// // Invert base frame camera pose to get world-to-base frame transform 
-// //   float base2world_inv[16] = {0}; # Modification: Hongtao Wu
-// //   invert_matrix(base2world, base2world_inv);
 
   // Initialize voxel grid
   float * voxel_grid_TSDF = new float[voxel_grid_dim_x * voxel_grid_dim_y * voxel_grid_dim_z];
   float * voxel_grid_weight = new float[voxel_grid_dim_x * voxel_grid_dim_y * voxel_grid_dim_z];
   for (int i = 0; i < voxel_grid_dim_x * voxel_grid_dim_y * voxel_grid_dim_z; ++i)
     voxel_grid_TSDF[i] = 1.0f;
-  memset(voxel_grid_weight, 0, sizeof(float) * voxel_grid_dim_x * voxel_grid_dim_y * voxel_grid_dim_z);
 
-  // // Load variables to GPU memory
-  // float * gpu_voxel_grid_TSDF;
-  // float * gpu_voxel_grid_weight;
-  // cudaMalloc(&gpu_voxel_grid_TSDF, voxel_grid_dim_x * voxel_grid_dim_y * voxel_grid_dim_z * sizeof(float));
-  // cudaMalloc(&gpu_voxel_grid_weight, voxel_grid_dim_x * voxel_grid_dim_y * voxel_grid_dim_z * sizeof(float));
-  // checkCUDA(__LINE__, cudaGetLastError());
-  // cudaMemcpy(gpu_voxel_grid_TSDF, voxel_grid_TSDF, voxel_grid_dim_x * voxel_grid_dim_y * voxel_grid_dim_z * sizeof(float), cudaMemcpyHostToDevice);
-  // cudaMemcpy(gpu_voxel_grid_weight, voxel_grid_weight, voxel_grid_dim_x * voxel_grid_dim_y * voxel_grid_dim_z * sizeof(float), cudaMemcpyHostToDevice);
-  // checkCUDA(__LINE__, cudaGetLastError());
-  // float * gpu_cam_K;
-  // float * gpu_cam2base;
-  // float * gpu_depth_im;
-  // cudaMalloc(&gpu_cam_K, 3 * 3 * sizeof(float));
-  // cudaMemcpy(gpu_cam_K, cam_K, 3 * 3 * sizeof(float), cudaMemcpyHostToDevice);
-  // cudaMalloc(&gpu_cam2base, 4 * 4 * sizeof(float));
-  // cudaMalloc(&gpu_depth_im, im_height * im_width * sizeof(float));
-  // checkCUDA(__LINE__, cudaGetLastError());
-
-  // float* voxel_grid_TSDF_ptr = voxel_grid_TSDF;
-  // float* voxel_grid_weight_ptr = voxel_grid_weight;
-
-  std::cout << "Before loop: " << std::endl;
 
   // Loop through each depth frame and integrate TSDF voxel grid
   for (int frame_idx = first_frame_idx; frame_idx < first_frame_idx + (int)num_frames; ++frame_idx) {
@@ -208,19 +167,6 @@ int main(int argc, char * argv[]) {
     std::vector<float> cam2world_vec = LoadMatrixFromFile(cam2world_file, 4, 4);
     std::copy(cam2world_vec.begin(), cam2world_vec.end(), cam2world);
 
-    // // Compute relative camera pose (camera-to-base frame)
-    // multiply_matrix(base2world_inv, cam2world, cam2base); # Modification: Hongtao Wu
-
-    // cudaMemcpy(gpu_cam2base, cam2base, 4 * 4 * sizeof(float), cudaMemcpyHostToDevice); # Modificaition: Hongtao Wu
-
-    // cudaMemcpy(gpu_cam2base, cam2world, 4 * 4 * sizeof(float), cudaMemcpyHostToDevice);
-    // cudaMemcpy(gpu_depth_im, depth_im, im_height * im_width * sizeof(float), cudaMemcpyHostToDevice);
-    // checkCUDA(__LINE__, cudaGetLastError());
-
-    // float* cam_K_ptr = &cam_K;
-    // float*cam2base_ptr = &cam2base_ptr;
-    // float* depth_im_ptr = &depth_im;
-
     std::cout << "Fusing: " << frame_idx << std::endl;
 
     Integrate(cam_K, cam2world, depth_im,
@@ -228,12 +174,6 @@ int main(int argc, char * argv[]) {
               voxel_grid_origin_x, voxel_grid_origin_y, voxel_grid_origin_z, voxel_size, trunc_margin,
               voxel_grid_TSDF, voxel_grid_weight);
   }
-
-  // Load TSDF voxel grid from GPU to CPU memory
-  // cudaMemcpy(voxel_grid_TSDF, gpu_voxel_grid_TSDF, voxel_grid_dim_x * voxel_grid_dim_y * voxel_grid_dim_z * sizeof(float), cudaMemcpyDeviceToHost);
-  // cudaMemcpy(voxel_grid_weight, gpu_voxel_grid_weight, voxel_grid_dim_x * voxel_grid_dim_y * voxel_grid_dim_z * sizeof(float), cudaMemcpyDeviceToHost);
-  // checkCUDA(__LINE__, cudaGetLastError());
-
   // Compute surface points from TSDF voxel grid and save to point cloud .ply file
   std::cout << "Saving surface point cloud (tsdf.ply)..." << std::endl;
   SaveVoxelGrid2SurfacePointCloud("model/tsdf.ply", voxel_grid_dim_x, voxel_grid_dim_y, voxel_grid_dim_z, 
