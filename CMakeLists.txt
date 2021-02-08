@@ -7,8 +7,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 find_package(OpenCV REQUIRED)
 find_package(Boost REQUIRED filesystem)
+find_package(PCL REQUIRED REQUIRED COMPONENTS io registration segmentation filters search)
 
-include_directories(./include/)
+include_directories(
+    ./include/
+    ${PCL_INCLUDE_LIBS}
+)
+
 
 add_executable(tsdf-fusion-cpu src/tsdf_fusion_cpu.cpp)
 target_link_libraries(tsdf-fusion-cpu ${OpenCV_LIBS})
+
+add_executable(tsdf-fusion-plane-segmentation src/tsdf_fusion_plane_segmentation.cpp)
+target_link_libraries(tsdf-fusion-plane-segmentation ${OpenCV_LIBS} ${PCL_LIBRARIES})
