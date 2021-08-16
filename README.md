@@ -8,7 +8,7 @@ mkdir build && cd build
 cmake ..
 make
 ```
-
+Required open-cv version: 4.2.0
 ## Usage
 1. Prepare the camera intrinsic file. An example of camera intrinsic file is in ps-instrinsic.txt
 2. Prepare the data. Save the depth image and the homogenous transformation of the camera frame in the world frame when taking the image. The name of the depth image and its corresponding pose txt should be the same. Example data are saved in data/. Example output is saved in model/.
