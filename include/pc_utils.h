@@ -37,10 +37,10 @@ void horizontalPlaneRemoval(const pcl::PointCloud<pcl::PointXYZ>::Ptr &PC,
     seg.setOptimizeCoefficients(true);
     seg.setModelType(pcl::SACMODEL_PLANE);
     seg.setMethodType(pcl::SAC_RANSAC);
-    seg.setDistanceThreshold(0.01);
+    seg.setDistanceThreshold(0.012);
 
     // value to describe how horizontal the plane is
-    double horizontality_threshold = 0.8;
+    double horizontality_threshold = 0.9;
     // value to describe how close the plane is to the origin
     double dist_to_origin_threshold = 0.1;
 
