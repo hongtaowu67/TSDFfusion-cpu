@@ -98,7 +98,7 @@ void euclideanClusterExtraction(const pcl::PointCloud<pcl::PointXYZ>::Ptr &PC,
     // Euclidean Cluster
     std::vector<pcl::PointIndices> cluster_indices;
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
-    ec.setClusterTolerance(0.01);
+    ec.setClusterTolerance(0.015);
     ec.setMinClusterSize(2000);
     ec.setMaxClusterSize(100000);
 
