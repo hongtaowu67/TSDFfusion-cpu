@@ -214,6 +214,9 @@ int main(int argc, char *argv[])
         voxel_grid_dim_y,
         voxel_grid_dim_z);
 
+    pcl::PLYWriter writer;
+    writer.write<pcl::PointXYZ>("model/tsdf_plane_rm.ply", *pc_plane_rm);
+
     euclideanClusterExtraction(
         pc_plane_rm,
         pc_eu_cluster,
@@ -226,6 +229,8 @@ int main(int argc, char *argv[])
         voxel_grid_dim_x,
         voxel_grid_dim_y,
         voxel_grid_dim_z);
+    
+    writer.write<pcl::PointXYZ>("model/tsdf_eu_cluster.ply", *pc_eu_cluster);
 
     std::cout << "Saving surface point cloud (tsdf.ply)..." << std::endl;
     SaveVoxelGrid2SurfacePointCloud("model/tsdf.ply", voxel_grid_dim_x, voxel_grid_dim_y, voxel_grid_dim_z,

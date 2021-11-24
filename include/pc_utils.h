@@ -13,6 +13,10 @@
 #include <pcl/segmentation/extract_clusters.h>
 #include <pcl/registration/icp.h>
 #include <pcl/features/moment_of_inertia_estimation.h>
+#include <pcl/features/normal_3d.h>
+
+#include <Eigen/Dense>
+#include <Eigen/Core>
 
 using namespace std;
 
@@ -30,21 +34,43 @@ void horizontalPlaneRemoval(const pcl::PointCloud<pcl::PointXYZ>::Ptr &PC,
                             const int &voxel_grid_dim_y,
                             const int &voxel_grid_dim_z)
 {
+    std::cout << "Initialize..." << std::endl;
     pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
     pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
 
-    pcl::SACSegmentation<pcl::PointXYZ> seg;
+    std::cout << "Initialize..." << std::endl;
+
+    Eigen::Vector3f normal_axis(0.0, 0.0, 1.0);
+    pcl::SACSegmentation<pcl::PointNormal> seg;
     seg.setOptimizeCoefficients(true);
-    seg.setModelType(pcl::SACMODEL_PLANE);
+    seg.setModelType(pcl::SACMODEL_PERPENDICULAR_PLANE);
+    seg.setMaxIterations(500);
     seg.setMethodType(pcl::SAC_RANSAC);
+    seg.setAxis(normal_axis);
+    seg.setEpsAngle(20.0f * (M_PI / 180.0f));
     seg.setDistanceThreshold(0.012);
+
+    std::cout << "Finish setting up SAC" << std::endl;
 
     // value to describe how horizontal the plane is
     double horizontality_threshold = 0.9;
     // value to describe how close the plane is to the origin
     double dist_to_origin_threshold = 0.1;
 
-    seg.setInputCloud(PC);
+    // Compute normals for the PC
+    pcl::PointCloud<pcl::PointNormal>::Ptr PC_normals (new pcl::PointCloud<pcl::PointNormal>); 
+    pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
+    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
+    ne.setInputCloud(PC);
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ> ());
+    ne.setSearchMethod (tree);
+    ne.setRadiusSearch (0.03);
+    ne.compute(*normals);
+    pcl::concatenateFields(*PC, *normals, *PC_normals);
+
+    std::cout << "Finish computing normal" << std::endl;
+
+    seg.setInputCloud(PC_normals);
     seg.segment(*inliers, *coefficients);
 
     if (inliers->indices.size() == 0)
